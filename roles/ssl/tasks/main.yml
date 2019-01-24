@@ -25,6 +25,4 @@
 
 - name: generate dhparams
   shell: "openssl dhparam -out {{ cert_root }}/{{ dhparam_name }} 2048"
-  args:
-    creates: "{{ cert_root }}/{{ dhparam_name }}"
 
