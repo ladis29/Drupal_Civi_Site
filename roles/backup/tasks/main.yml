@@ -1,0 +1,41 @@
+--- #Backup issues
+  - name: Creating folder to put DB backups
+    file:
+      path: "{{ backup_config_path }}"
+      state: directory
+      owner: "{{ backup_user }}"
+      group: "{{ backup_user }}"
+      mode: 0744
+
+  - name: Ensure that general backup folder exists.
+    file:
+      path: "{{ backup_path }}"
+      state: directory
+      owner: "{{ backup_user }}"
+      group: "{{ backup_user }}"
+      mode: 0744
+
+  - name: Copying  database backup configuration file to folder
+    template:
+      src: databasebackup.j2
+      dest: "{{ backup_config_path }}/databasebackup.yml"
+      owner: "{{ backup_user }}"
+      group: "{{ backup_user }}"
+      mode: 0744
+
+  - name: Add a CRON job for DB backups
+    cron:
+      name: Databases backup
+      minute: "{{ backup_minute }}"
+      hour: "{{ backup_db_hour }}"
+      job: "ansible-playbook > '{{ backup_config_path }}/databasebackup.yml'"
+      state: "{{ backup_cron_job_state }}"
+
+  - name: Configure general backup cron job.
+    cron:
+      name: "Backup cron job"
+      minute: "{{ backup_minute }}"
+      hour: "{{ backup_hour }}"
+      user: "{{ backup_user }}"
+      job: "rsync -a --delete {{ backup_directories }} {{ backup_path }}"
+      state: "{{ backup_cron_job_state }}"

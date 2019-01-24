@@ -1,0 +1,30 @@
+---
+- name: SSL dir exists
+  file:
+    path: "{{ cert_root }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Add certificate
+  copy:
+    content: "{{ cert_content }}"
+    dest: "{{ cert_root }}/{{ cert_name }}"
+    owner: root
+    group: root
+    mode: 600
+
+- name: Add certificate key
+  copy:
+    content: "{{ cert_key_content }}"
+    dest: "{{ cert_root }}/{{ cert_key }}"
+    owner: root
+    group: root
+    mode: 600
+
+- name: generate dhparams
+  shell: "openssl dhparam -out {{ cert_root }}/{{ dhparam_name }} 2048"
+  args:
+    creates: "{{ cert_root }}/{{ dhparam_name }}"
+

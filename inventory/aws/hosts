@@ -1,0 +1,4 @@
+drupal ansible_host=18.188.192.146 ansible_port=22 ansible_user='ubuntu'
+
+[devopschallenge]
+drupal

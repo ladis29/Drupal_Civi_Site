@@ -1,0 +1,39 @@
+--- # Install some packages
+- name: Adding ondrej repositories
+  apt_repository:
+    repo: ppa:ondrej/php
+    state: present
+
+- name: Adding certbot repositories
+  apt_repository:
+    repo: ppa:certbot/certbot
+    state: present
+
+- name: Updating System
+  raw: sudo apt-get update
+
+- name: Installing nginx
+  apt:
+    name: nginx
+    state: latest
+    update_cache: yes
+  notify: Restart_nginx
+
+- name: Installing mysql-server
+  apt:
+    name: mysql-server
+    state: latest
+    update_cache: yes
+  notify: Restart_mysql
+
+- name: Installing php7.1 packages
+  apt:
+    name: '{{ php_group }}'
+    state: latest
+    update_cache: yes
+
+- name: Installing  Ansible Packages
+  apt:
+    name: '{{ ansible_packages }}'
+    state: latest
+    update_cache: yes

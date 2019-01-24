@@ -1,0 +1,6 @@
+---
+- name: Restart_nginx
+  service: name=nginx state=restarted enabled=yes
+
+- name: Restart_mysql
+  service: name=mysql state=restarted enabled=yes

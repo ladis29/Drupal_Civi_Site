@@ -1,0 +1,15 @@
+- name: Dump for Drupal DB
+  mysql_db:
+    name: drupal
+    state: dump
+    target: /bkp/drupalbkp.sql
+    login_user: root
+    login_password: root123
+
+- name: Dump for CiviCRM DB
+  mysql_db:
+    name: civicrm
+    state: dump
+    target: /bkp/civicrmbkp.sql
+    login_user: root
+    login_password: root123

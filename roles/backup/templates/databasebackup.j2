@@ -1,0 +1,21 @@
+--- # Dump drupal and CiviCRM databases
+
+- hosts: 127.0.0.1
+  connection: local
+
+  tasks:
+  - name: Dump Drupal DB
+    mysql_db:
+      name: drupal
+      state: dump
+      target: /bkp/drupal.sql
+      login_user: root
+      login_password: root123
+
+  - name: Dump CiviCRM DB
+    mysql_db:
+      name: civicrm
+      state: dump
+      target: /bkp/civicrm.sql
+      login_user: root
+      login_password: root123

@@ -1,0 +1,15 @@
+---
+  - name: Adding civicrm directory to Drupal modules
+    file:
+      path: /var/www/html/drupal/sites/all/modules/civicrm
+      state: directory
+
+  - name: Downloading CiviCRM
+    unarchive:
+      src: https://download.civicrm.org/civicrm-5.9.1-drupal.tar.gz
+      dest: /var/www/html/drupal/sites/all/modules/civicrm
+      remote_src: yes
+      extra_opts: [--strip-components=1]
+      owner: www-data
+      group: www-data
+      mode: 0755

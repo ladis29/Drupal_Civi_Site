@@ -1,0 +1,46 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name juniordevopschallenge.com;
+
+    if ($scheme != "https") {
+        return 301 https://$host$request_uri;
+    }
+
+}
+
+server {
+	listen 443 ssl; 
+	ssl_certificate {{ cert_root }}/{{ cert_name }} ;
+	ssl_certificate_key {{ cert_root }}/{{ cert_key }} ;
+	ssl_dhparam {{ cert_root }}/{{ dhparam_name }};
+
+    root /var/www/html/drupal;
+    index  index.php index.html index.htm;
+    server_name juniordevopschallenge.com;
+
+    location / {
+    try_files $uri /index.php?$query_string;
+    }
+
+    location @rewrite {
+               rewrite ^/(.*)$ /index.php?q=$1;
+        }
+
+    location ~ [^/]\.php(/|$) {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~ ^/sites/.*/files/styles/ { # For Drupal >= 7
+               try_files $uri @rewrite;
+        }
+
+    location ~ ^(/[a-z\-]+)?/system/files/ { # For Drupal >= 7
+        try_files $uri /index.php?$query_string;
+        }
+
+
+}

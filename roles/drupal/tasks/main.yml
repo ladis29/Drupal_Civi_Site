@@ -1,0 +1,40 @@
+---
+  # Download and Install Drupal
+- name: Creating Drupal directory
+  file:
+    path: /var/www/html/drupal/
+    state: directory
+
+- name: Downloading and setting Drupal up
+  unarchive:
+    src: https://ftp.drupal.org/files/projects/drupal-7.63.tar.gz
+    dest: /var/www/html/drupal/
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+    owner: www-data
+    group: www-data
+    mode: 0755
+
+- name: Copying configuration file to NGINX folder
+  template:
+    src: drupal.j2
+    dest: /etc/nginx/sites-available/drupal.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Create the symlink for Drupal to run
+  file:
+    src: /etc/nginx/sites-available/drupal.conf
+    dest: /etc/nginx/sites-enabled/drupal.conf
+    state: link
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Changing sites folder access for civicrm instalation
+  file:
+    path: /var/www/html/drupal/sites/default/
+    owner: www-data
+    group: www-data
+    mode: 0755
